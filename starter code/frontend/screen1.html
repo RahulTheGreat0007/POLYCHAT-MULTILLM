@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PolyChat</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo">✨ PolyChat</div>
+
+    <button class="new-chat">＋ New Chat</button>
+
+    <ul class="chat-list">
+      <li>Quantum computing encryption</li>
+      <li>React performance optimization</li>
+      <li>Q3 Marketing Strategy</li>
+      <li>Python async best practices</li>
+      <li>Design system components</li>
+    </ul>
+
+    <div class="sidebar-footer">
+  <div class="settings">
+    <span class="icon">⚙️</span>
+    <span>Settings</span>
+  </div>
+
+  <div class="user-card">
+    <div class="avatar">👤</div>
+    <div>
+      <strong>Alex Chen</strong><br />
+      <small>Pro Plan</small>
+    </div>
+    </div>
+  </div>
+
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <div class="top-right">
+      <span class="notification">🔔</span>
+    </div>
+
+    <h1>
+      Where do you want to <span>explore today?</span>
+    </h1>
+
+    <p class="subtitle">
+      Query multiple advanced models simultaneously.
+    </p>
+
+    <div class="model-tabs">
+      <button class="model-btn active" data-model="openai">GPT-4o</button>
+      <button class="model-btn" data-model="cohere">Cohere</button>
+      <button class="model-btn" data-model="gemini">Gemini 2.5 Flash</button>
+      <button class="model-btn" data-model="auto">✨ Auto</button>
+    </div>
+
+
+    <div class="input-box">
+      <span class="left-icon">🔍</span>
+
+      <input
+        id="prompt"
+        type="text"
+        placeholder="Ask anything..."
+      />
+
+      <div class="right-icons">
+        <span class="icon-btn" title="Attach">📎</span>
+        <span class="icon-btn" title="Voice">🎙</span>
+      </div>
+
+      <button class="send-btn" title="Send">↑</button>
+    </div>
+
+
+
+    <div class="quick-actions">
+      <button>✨ Summarize</button>
+      <button>💻 Code</button>
+      <button>💡 Brainstorm</button>
+      <button>📊 Analyze Data</button>
+    </div>
+
+    <footer class="main-footer">
+  <span>TERMS</span>
+  <span>PRIVACY</span>
+  <span>SYSTEM STATUS <span class="dot"></span></span>
+</footer>
+
+  </main>
+
+</div>
+
+<script>
+  let selectedModel = "openai";
+
+  // MODEL SELECTION
+  document.querySelectorAll(".model-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".model-btn")
+        .forEach(b => b.classList.remove("active"));
+
+      btn.classList.add("active");
+      selectedModel = btn.dataset.model;
+      console.log("Selected model:", selectedModel);
+    });
+  });
+
+  // SEND PROMPT
+  async function sendPrompt() {
+    const input = document.getElementById("prompt");
+    const message = input.value.trim();
+    if (!message) return;
+
+    console.log("Sending:", message, selectedModel);
+
+    const res = await fetch("http://localhost:3000/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message,
+        model: selectedModel
+      })
+    });
+
+    const data = await res.json();
+    localStorage.setItem("chatId", data.chatId);
+    window.location.href = `screen2.html?chatId=${data.chatId}`;
+
+  }
+
+  // CLICK SEND
+  document.querySelector(".send-btn")
+    .addEventListener("click", sendPrompt);
+
+  // ENTER KEY SUPPORT
+  document.getElementById("prompt")
+    .addEventListener("keydown", e => {
+      if (e.key === "Enter") sendPrompt();
+    });
+
+  // LOAD CHAT HISTORY
+  async function loadChats() {
+    const res = await fetch("http://localhost:3000/api/chats");
+    const chats = await res.json();
+
+    const list = document.querySelector(".chat-list");
+    list.innerHTML = "";
+
+    chats.forEach(chat => {
+      const li = document.createElement("li");
+      li.textContent = chat.title;
+      list.appendChild(li);
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", loadChats);
+</script>
+
+</body>
+</html>

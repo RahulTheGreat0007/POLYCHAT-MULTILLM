@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PolyChat</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo">✨ PolyChat</div>
+    <button class="new-chat" onclick="newChat()">＋ New Chat</button>
+    <ul class="chat-list"></ul>
+
+    <div class="sidebar-footer">
+      <div class="settings">⚙ Settings</div>
+      <div class="user-card">
+        <div class="avatar">👤</div>
+        <div>
+          <strong>Alex Chen</strong><br />
+          <small>Pro Plan</small>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="chat-main">
+
+  <div class="chat-content">
+
+    <h1 id="chat-title"></h1>
+
+    <div id="messages" class="messages"></div>
+
+    <div class="chat-input">
+      <select id="model">
+        <option value="openai">GPT-4o</option>
+        <option value="cohere">Cohere</option>
+        <option value="gemini">Gemini 2.5 Flash</option>
+        <option value="auto">✨ Auto</option>
+      </select>
+
+      <input id="prompt" placeholder="Ask anything..." />
+      <button onclick="sendMessage()">↑</button>
+    </div>
+
+  </div>
+
+</main>
+
+</div>
+
+<script src="screen2.js"></script>
+</body>
+</html>
